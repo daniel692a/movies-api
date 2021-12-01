@@ -1,3 +1,4 @@
+import hashlib
 from peewee import *
 import os
 from dotenv import dotenv_values
@@ -24,6 +25,12 @@ class User(Model):
     class Meta:
         database = database
         table_name = 'users'
+
+    @classmethod
+    def hash_password(cls, password):
+        h = hashlib.md5()
+        password = h.update(password.encode('utf-8'))
+        return h.hexdigest()
 
 class Movie(Model):
     title = CharField(max_length=50)

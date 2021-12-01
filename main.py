@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from database import database as connection
 from database import User, Movie, UserReview
+from schemas import UserBM
 #instancia
 app = FastAPI(title="Movies", description="API para calificar películas", version="1")
 
@@ -26,7 +27,10 @@ def shutdown():
 async def index():
     return "Movies API"
 
-@app.get('/about')
-async def about():
-    return "about"
+
+@app.post('/users')
+async def create_user(user: UserBM):
+    hash_password = User.hash_password(user.password)
+    user = User.create(username=user.username, password=hash_password)
+    return user.id
 

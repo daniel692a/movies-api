@@ -1,7 +1,7 @@
 from fastapi import FastAPI, HTTPException
 from database import database as connection
 from database import User, Movie, UserReview
-from schemas import UserBM
+from schemas import UserRequestModel, UserResponseModel
 #instancia
 app = FastAPI(title="Movies", description="API para calificar películas", version="1")
 
@@ -28,13 +28,14 @@ async def index():
     return "Movies API"
 
 
-@app.post('/users')
-async def create_user(user: UserBM):
+@app.post('/users', response_model=UserResponseModel)
+async def create_user(user: UserRequestModel):
 
     if User.select().where(User.username == user.username).exists():
         return HTTPException(status_code=409, detail="User already exists")
 
     hash_password = User.hash_password(user.password)
     user = User.create(username=user.username, password=hash_password)
-    return user.id
+
+    return UserResponseModel(id=user.id, username=user.username)
 

@@ -1,6 +1,6 @@
 from pydantic import BaseModel, validator
 
-class UserBM(BaseModel):
+class UserRequestModel(BaseModel):
     username: str
     password: str
 
@@ -19,3 +19,7 @@ class UserBM(BaseModel):
         if len(password) > 50:
             raise ValueError("Password must be at most 50 characters long")
         return password
+
+class UserResponseModel(BaseModel):
+    id: int
+    username: str

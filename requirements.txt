@@ -2,3 +2,4 @@ fastapi
 uvicorn
 peewee
 mysqlclient
+python-dotenv
